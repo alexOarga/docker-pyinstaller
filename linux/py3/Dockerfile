@@ -1,7 +1,7 @@
 FROM ubuntu:12.04
 SHELL ["/bin/bash", "-i", "-c"]
 
-ARG PYTHON_VERSION=3.6.6
+ARG PYTHON_VERSION=3.6.5
 ARG PYINSTALLER_VERSION=3.4
 
 ENV PYPI_URL=https://pypi.python.org/
@@ -9,6 +9,7 @@ ENV PYPI_INDEX_URL=https://pypi.python.org/simple
 ENV PYENV_VERSION=${PYTHON_VERSION}
 
 COPY entrypoint.sh /entrypoint.sh
+COPY xz-5.2.4.tar.gz /xz-5.2.4.tar.gz
 
 RUN \
     set -x \
@@ -25,6 +26,13 @@ RUN \
         libsqlite3-dev \
         libssl-dev \
         zlib1g-dev \
+    # install xz
+    && tar xvf xz-5.2.4.tar.gz \
+    && cd xz-5.2.4 \
+    && ./configure --prefix=$HOME \
+    && make \
+    && make install \
+    && cd ../ \
     # install pyenv
     && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
     && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \
