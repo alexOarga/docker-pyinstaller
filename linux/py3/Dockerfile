@@ -9,7 +9,6 @@ ENV PYPI_INDEX_URL=https://pypi.python.org/simple
 ENV PYENV_VERSION=${PYTHON_VERSION}
 
 COPY entrypoint.sh /entrypoint.sh
-COPY xz-5.2.4.tar.gz /xz-5.2.4.tar.gz
 
 RUN \
     set -x \
@@ -26,13 +25,8 @@ RUN \
         libsqlite3-dev \
         libssl-dev \
         zlib1g-dev \
-    # install xz
-    && tar xvf xz-5.2.4.tar.gz \
-    && cd xz-5.2.4 \
-    && ./configure --prefix=$HOME \
-    && make \
-    && make install \
-    && cd ../ \
+    # install further requirements
+    && apt-get install -y make  build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev libx11-xcb1 \
     # install pyenv
     && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
     && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \
